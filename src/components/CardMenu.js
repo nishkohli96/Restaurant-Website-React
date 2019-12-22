@@ -1,17 +1,18 @@
 
 import React, { Component } from 'react';
 import  Dishdetail from './Dishdetail';
-import { Card,CardImg,CardImgOverlay,CardText,CardBody,CardTitle } from 'reactstrap'; 
+import { Card,CardImg,CardImgOverlay,CardText,CardBody,CardTitle,Breadcrumb, BreadcrumbItem } from 'reactstrap'; 
+import { Link } from 'react-router-dom';
 
-
-function RenderMenuItem ({dish, onClick}) {
+function RenderMenuItem ({dish}) {
   return (
-      <Card
-          onClick={() => onClick(dish.id)}>
+      <Card>
+         <Link to={`/menu/${dish.id}`} >
           <CardImg width="100%" src={dish.image} alt={dish.name} />
           <CardImgOverlay>
-              <CardTitle>{dish.name}</CardTitle>
+            <CardTitle>{dish.name}</CardTitle>
           </CardImgOverlay>
+        </Link>
       </Card>
   );
 }
@@ -21,13 +22,23 @@ const Menu = (props) => {
   const menu = props.dishes.map((dish) => {
       return (
           <div className="col-12 col-md-5 m-1"  key={dish.id}>
-              <RenderMenuItem dish={dish} onClick={props.onClick} />
+              <RenderMenuItem dish={dish} />
           </div>
       );
   });
 
   return (
       <div className="container">
+         <div className="row">
+            <Breadcrumb>
+              <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
+              <BreadcrumbItem active>Menu</BreadcrumbItem>
+            </Breadcrumb>
+            <div className="col-12">
+              <h3>Menu</h3>
+              <hr />
+            </div>                
+           </div>
           <div className="row">
               {menu}
           </div>
@@ -37,51 +48,12 @@ const Menu = (props) => {
 
 class CardMenu extends Component 
 {
-  renderDish(dish)
-  {
-    if(dish != null)
-    {
-      return(
-        <Card>
-          <CardImg width="100%" src={dish.image} alt={dish.name} />                 
-          <CardBody>
-            <CardTitle>{dish.name}</CardTitle>
-            <CardText>{dish.description}</CardText>
-          </CardBody>
-        </Card>
-      )
-    }
-    else{
-      return(
-        <div> </div>
-      )
-    }
-  }
-
-  renderComments()
-  {
-    if(this.props.comments != null)
-    {
-      const comments = this.props.comments.map((cmt) => {
-        return(
-          <div>
-            <h4>{cmt.comment}</h4>
-            <p> -- {cmt.author} , {new Intl.DateTimeFormat('en-US',{year: 'numeric',month:'short',day:'2-digit'}).format(new Date(Date.parse(cmt.date)))}</p>
-          </div>
-        );
-      });
-      return comments;
-    }
-    else 
-    return(<div></div>);  
-  }
-
   render() 
   {
     const menu = this.props.dishes.map((dish) => {
       return (
         <div key={dish.id} className="col-12 col-md-5 m-1">
-          <Card onClick= {(dishId)=> this.props.onClick(dishId)}>
+          <Card>
             <CardImg width="100%" src={dish.image} alt={dish.name} />                 
             <CardImgOverlay body className="ml-5">
               <CardTitle>{dish.name}</CardTitle>
@@ -95,11 +67,6 @@ class CardMenu extends Component
       <div className="container">
         <div className="row">
           {menu}
-        </div>
-        <div className="row">
-          <div className="col-12 col-md-5 m-1">
-            {this.renderComments()};
-          </div>
         </div>
       </div>
     );
