@@ -10,9 +10,6 @@ function About(props) {
             <RenderLeader leader= { leader } />
         );
     });
-    const ldr={
-        name : "nish"
-    }
 
     function RenderLeader(props)
     {
